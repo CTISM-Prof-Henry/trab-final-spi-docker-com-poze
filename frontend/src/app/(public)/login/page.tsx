@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
+import Link from "next/link";
 
 export default function Login() {
 
     function maskMatricula(e: React.ChangeEvent<HTMLInputElement>) {
-        let value = e.target.value[e.target.value.length - 1];
-        value = /\d/.test(value) ? value : "";
-    
-        e.target.value = e.target.value + value;
+        let value = e.target.value;
+        value =  value.replace(/\D/g, '');   
+        e.target.value = value;
     }
 
     return (
@@ -44,11 +44,11 @@ export default function Login() {
                             </div>
                         </form>
                         <CardAction>
-                        <div className="grid grid-cols-3 gap-2 mt-4">
-                            <Button variant="link" className="text-sm text-blue-500 hover:underline mb-4">Esqueci minha senha</Button>
-                            <Button variant="link" className="text-sm text-blue-500 hover:underline mb-4">Cadastrar-se</Button>
-                            <Button className="bg-blue-500 hover:bg-blue-600 text-white">Entrar</Button>
-                        </div>
+                            <div className="grid grid-cols-3 gap-2 mt-4">
+                                <Button variant="link" className="text-sm text-blue-500 hover:underline mb-4">Esqueci minha senha</Button>
+                                <Button variant="link" className="text-sm text-blue-500 hover:underline mb-4">Cadastrar-se</Button>
+                                <Button className="bg-blue-500 hover:bg-blue-600 text-white">Entrar</Button>
+                            </div>
                         </CardAction>
                     </CardContent>
                 </Card>
