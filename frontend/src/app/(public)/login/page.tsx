@@ -26,7 +26,7 @@ export default function Login() {
                         <form>
                             <div className="flex flex-col gap-6">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="email">Matricula</Label>
+                                    <Label htmlFor="matricula">Matricula</Label>
                                     <Input
                                         id="matricula"
                                         type="text"
