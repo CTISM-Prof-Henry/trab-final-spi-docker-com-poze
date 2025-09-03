@@ -14,7 +14,7 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col justify-center bg-blue-300">
+        <div>
             <h3 className="text-3xl text-center mb-8">Sistema de Agendamento de Salas!</h3>
             <div className="flex items-center justify-center p-4 min-w-screen">
                 <Card className="bg-neutral-100 w-xl min-w-72">
