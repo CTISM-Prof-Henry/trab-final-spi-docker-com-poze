@@ -46,7 +46,9 @@ export default function Login() {
                         <CardAction>
                             <div className="grid grid-cols-3 gap-2 mt-4">
                                 <Button variant="link" className="text-sm text-blue-500 hover:underline mb-4">Esqueci minha senha</Button>
-                                <Button variant="link" className="text-sm text-blue-500 hover:underline mb-4">Cadastrar-se</Button>
+                                <Button variant="link" className="text-sm text-blue-500 hover:underline mb-4">
+                                    <Link href="/register">Cadastrar-se</Link>
+                                </Button>
                                 <Button className="bg-blue-500 hover:bg-blue-600 text-white">Entrar</Button>
                             </div>
                         </CardAction>
