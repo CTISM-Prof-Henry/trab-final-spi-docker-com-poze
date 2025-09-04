@@ -4,6 +4,7 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import SpiUtils from "@/shared/utils/spiUtils";
 import { Label } from "@radix-ui/react-label";
 import { AlertCircleIcon } from "lucide-react";
 import Link from "next/link";
@@ -16,13 +17,6 @@ export default function Register() {
     const [matricula, setMatricula] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-
-    function maskMatricula(e: React.ChangeEvent<HTMLInputElement>) {
-        let value = e.target.value;
-        value = value.replace(/\D/g, '');
-        setMatricula(value);
-        e.target.value = value;
-    }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>, setState: React.Dispatch<React.SetStateAction<string>>) {
         setState(e.target.value);
@@ -78,7 +72,7 @@ export default function Register() {
                                     <Input
                                         id="matricula"
                                         type="text"
-                                        onChange={maskMatricula}
+                                        onChange={(e) => SpiUtils.maskMatricula(e, setMatricula)}
                                         placeholder="Insira sua matrícula"
                                         required
                                     />

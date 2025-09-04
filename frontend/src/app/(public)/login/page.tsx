@@ -2,15 +2,19 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import SpiUtils from "@/shared/utils/spiUtils";
 import { Label } from "@radix-ui/react-label";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Login() {
 
-    function maskMatricula(e: React.ChangeEvent<HTMLInputElement>) {
-        let value = e.target.value;
-        value =  value.replace(/\D/g, '');   
-        e.target.value = value;
+    const [matricula, setMatricula] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+
+    function handleSubmit() {
+        event?.preventDefault();
+        console.log({ matricula, password });
     }
 
     return (
@@ -23,14 +27,14 @@ export default function Login() {
                         <CardDescription>Faça login na nossa plataforma!</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <form>
+                        <form onSubmit={handleSubmit}>
                             <div className="flex flex-col gap-6">
                                 <div className="grid gap-2">
                                     <Label htmlFor="matricula">Matricula</Label>
                                     <Input
                                         id="matricula"
                                         type="text"
-                                        onChange={maskMatricula}
+                                        onChange={(e) => SpiUtils.maskMatricula(e, setMatricula)}
                                         placeholder="Insira sua matrícula"
                                         required
                                     />
@@ -39,19 +43,24 @@ export default function Login() {
                                     <div className="flex items-center">
                                         <Label htmlFor="password">Senha</Label>
                                     </div>
-                                    <Input id="password" type="password" placeholder="Digite sua senha" required />
+                                    <Input 
+                                        id="password"
+                                        type="password" 
+                                        placeholder="Digite sua senha"
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required />
                                 </div>
                             </div>
+                            <CardAction>
+                                <div className="grid grid-cols-3 gap-2 mt-4">
+                                    <Button variant="link" className="text-sm text-blue-500 hover:underline mb-4">Esqueci minha senha</Button>
+                                    <Button variant="link" className="text-sm text-blue-500 hover:underline mb-4">
+                                        <Link href="/register">Cadastrar-se</Link>
+                                    </Button>
+                                    <Button className="bg-blue-500 hover:bg-blue-600 text-white">Entrar</Button>
+                                </div>
+                            </CardAction>
                         </form>
-                        <CardAction>
-                            <div className="grid grid-cols-3 gap-2 mt-4">
-                                <Button variant="link" className="text-sm text-blue-500 hover:underline mb-4">Esqueci minha senha</Button>
-                                <Button variant="link" className="text-sm text-blue-500 hover:underline mb-4">
-                                    <Link href="/register">Cadastrar-se</Link>
-                                </Button>
-                                <Button className="bg-blue-500 hover:bg-blue-600 text-white">Entrar</Button>
-                            </div>
-                        </CardAction>
                     </CardContent>
                 </Card>
             </div>
