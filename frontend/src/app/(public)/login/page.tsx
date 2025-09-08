@@ -21,7 +21,7 @@ export default function Login() {
     async function handleSubmit() {
         event?.preventDefault();
         try {
-            await api.post("auth/login", { matricula, password });
+            await api.post("/auth/login", { matricula, password });
             router.push("/dashboard");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {

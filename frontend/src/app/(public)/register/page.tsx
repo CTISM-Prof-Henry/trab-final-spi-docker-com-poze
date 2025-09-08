@@ -4,11 +4,16 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import SpiUtils from "@/shared/utils/spiUtils";
 import { Label } from "@radix-ui/react-label";
-import { AlertCircleIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
+import { Command, CommandGroup, CommandItem, CommandList } from "cmdk";
+import { AlertCircleIcon, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import ComboboxFormRegister from "./components/ComboboxFormRegister";
+
 
 export default function Register() {
     const [isPassowordCoincide, setIsPasswordCoincide] = useState<boolean>(true);
@@ -17,6 +22,9 @@ export default function Register() {
     const [matricula, setMatricula] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [open, setOpen] = useState<boolean>(false);
+    const [tipo, setTipo] = useState<string>('');
+    
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>, setState: React.Dispatch<React.SetStateAction<string>>) {
         setState(e.target.value);
@@ -28,7 +36,7 @@ export default function Register() {
             setIsPasswordCoincide(false);
             return;
         }
-        console.log({ name, email, matricula, password, confirmPassword });
+        console.log({ name, email, matricula, password, confirmPassword, tipo });
     }
 
     return (
@@ -98,6 +106,16 @@ export default function Register() {
                                         onChange={(e) => handleChange(e, setConfirmPassword)}
                                         placeholder="Confirme sua senha"
                                         required />
+                                </div>
+                                <div className="grid gap-2">
+                                    <div className="flex items-center">
+                                        <ComboboxFormRegister 
+                                            open={open}
+                                            onChangeOpen={setOpen}
+                                            tipo={tipo}
+                                            onChangeTipo={setTipo}/>
+                                    </div>
+                                    
                                 </div>
                             </div>
                             <CardAction>
