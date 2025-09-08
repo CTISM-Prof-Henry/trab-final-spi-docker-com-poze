@@ -4,12 +4,13 @@ import { Popover, PopoverTrigger, PopoverContent, } from "@/components/ui/popove
 import { Command, CommandGroup, CommandItem, CommandList, } from "@/components/ui/command";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { TipoUsuario } from "@/app/core/dto/tipo-usuario.enum";
 
 interface ComboboxFormProps {
     open: boolean;
     onChangeOpen: Dispatch<SetStateAction<boolean>>;
-    tipo: string;
-    onChangeTipo: Dispatch<SetStateAction<string>>;
+    tipo: TipoUsuario | null;
+    onChangeTipo: Dispatch<SetStateAction<TipoUsuario | null>>;
 }
 
 interface TipoUsuarioForm {
@@ -20,9 +21,9 @@ interface TipoUsuarioForm {
 export default function ComboboxFormRegister({ open, onChangeOpen, tipo, onChangeTipo, }: ComboboxFormProps) {
 
     const tiposUsuario: TipoUsuarioForm[] = [
-        { value: "ALUNO", label: "Aluno" },
-        { value: "PROFESSOR", label: "Professor" },
-        { value: "ADMIN", label: "Admin" },
+        { value: TipoUsuario.ALUNO, label: "Aluno" },
+        { value: TipoUsuario.PROFESSOR, label: "Professor" },
+        { value: TipoUsuario.ADMIN, label: "Admin" },
     ];
 
     const triggerRef = useRef<HTMLButtonElement | null>(null);
@@ -69,7 +70,7 @@ export default function ComboboxFormRegister({ open, onChangeOpen, tipo, onChang
                                     key={t.value}
                                     value={t.value}
                                     onSelect={(currentValue) => {
-                                        onChangeTipo(currentValue === tipo ? "" : currentValue);
+                                        onChangeTipo(currentValue === tipo ? null : currentValue as TipoUsuario);
                                         onChangeOpen(false);
                                     }}
                                     className="flex cursor-pointer items-center px-3 py-2 text-sm hover:bg-neutral-100"
