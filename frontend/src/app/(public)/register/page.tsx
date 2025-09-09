@@ -6,7 +6,7 @@ import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import SpiUtils from "@/shared/utils/spiUtils";
 import { Label } from "@radix-ui/react-label";
-import { AlertCircleIcon, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import { AlertCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import ComboboxFormRegister from "./components/combobox-form-register";
@@ -32,15 +32,18 @@ export default function Register() {
         setState(e.target.value);
     }
 
+    function alterTextMessage(text: string) {
+        setMessage(text);
+        setIsMessageVisible(true);
+    }
+
     async function getFormData() {
         event?.preventDefault();
         if (password !== confirmPassword) {
-            setMessage("As senhas não coincidem!");
-            setIsMessageVisible(true);
+            alterTextMessage("As senhas não coincidem!");
             return;
         } else if (!tipo) {
-            setMessage("Você deve esolher pelo menos um tipo de usuário.");
-            setIsMessageVisible(true);
+            alterTextMessage("Você deve esolher pelo menos um tipo de usuário.");
             return;
         }
         setIsMessageVisible(false);
