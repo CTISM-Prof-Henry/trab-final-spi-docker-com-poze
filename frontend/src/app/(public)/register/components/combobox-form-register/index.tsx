@@ -31,9 +31,9 @@ export default function ComboboxFormRegister({ open, onChangeOpen, tipo, onChang
 
     useEffect(() => {
         function updateWidth() {
-        if (triggerRef.current) {
-            setContentWidth(triggerRef.current.offsetWidth);
-        }
+            if (triggerRef.current) {
+                setContentWidth(triggerRef.current.offsetWidth);
+            }
         }
 
         updateWidth();
