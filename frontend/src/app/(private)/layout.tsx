@@ -21,7 +21,7 @@ export default function Layout({ children }: Readonly<{children: React.ReactNode
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col justify-center bg-blue-300`}
+                className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col justify-center items-center bg-blue-300`}
             >
                 {children}
             </body>

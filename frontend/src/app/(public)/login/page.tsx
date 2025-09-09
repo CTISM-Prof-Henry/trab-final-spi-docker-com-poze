@@ -1,4 +1,5 @@
 'use client';
+import UserDTO from "@/app/core/dto/user.dto";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,10 +7,15 @@ import { Input } from "@/components/ui/input";
 import api from "@/lib/api";
 import SpiUtils from "@/shared/utils/spiUtils";
 import { Label } from "@radix-ui/react-label";
+import { AxiosResponse } from "axios";
 import { AlertCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+interface LoginResponse {
+    user: UserDTO;
+}
 
 export default function Login() {
 
@@ -21,7 +27,8 @@ export default function Login() {
     async function handleSubmit() {
         event?.preventDefault();
         try {
-            await api.post("/auth/login", { matricula, password });
+            const res: AxiosResponse<LoginResponse> = await api.post("/auth/login", { matricula, password });
+            sessionStorage.setItem("user_role", res.data.user.tipo);
             router.push("/");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
