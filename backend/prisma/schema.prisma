@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TipoUsuario {
+  ALUNO
+  PROFESSOR
+  ADMIN
+}
+
+enum StatusAgendamento {
+  PENDENTE
+  CONFIRMADO
+  CANCELADO
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  uuid      String  @unique @default(uuid())
+  email     String  @unique
+  name      String
+  password  String
+  matricula String  @unique
+  tipo      TipoUsuario
+  hashedRt  String? // hashed refresh token
+
+  Agendamento Agendamento[]
+}
+
+
+model Departamento {
+  id Int @id @default(autoincrement())
+  nome String 
+  localizacao String
+  Sala Sala[]
+}
+
+model Sala {
+  id Int @id @default(autoincrement())
+  nome String
+  capacidade Int
+  departamentoId Int
+  departamento Departamento @relation(fields: [departamentoId], references: [id])
+
+  Agendamento Agendamento[]
+}
+
+model Disciplina {
+  id Int @id @default(autoincrement())
+  nome String
+  codigo String @unique
+  cargaHoraria Int
+
+  Agendamento Agendamento[]
+}
+
+model Agendamento {
+  id Int @id @default(autoincrement())
+  data DateTime
+  horaInicio DateTime @db.Time
+  horaFim DateTime @db.Time
+  status StatusAgendamento
+
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  salaId Int
+  sala Sala @relation(fields: [salaId], references: [id])
+  disciplinaId Int
+  disciplina Disciplina @relation(fields: [disciplinaId], references: [id])
+}
