@@ -22,7 +22,7 @@ export default function Login() {
         event?.preventDefault();
         try {
             await api.post("/auth/login", { matricula, password });
-            router.push("/dashboard");
+            router.push("/");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             setError(error.response.data.message || "Falha no login.");
