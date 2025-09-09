@@ -9,7 +9,7 @@ import { Label } from "@radix-ui/react-label";
 import { AlertCircleIcon, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import ComboboxFormRegister from "./components/ComboboxFormRegister";
+import ComboboxFormRegister from "./components/combobox-form-register";
 import UserDTO from "@/app/core/dto/user.dto";
 import { TipoUsuario } from "@/app/core/dto/tipo-usuario.enum";
 import api from "@/lib/api";
