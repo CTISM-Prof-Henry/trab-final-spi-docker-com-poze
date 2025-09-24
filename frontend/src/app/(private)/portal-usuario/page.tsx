@@ -1,7 +1,12 @@
+import Header from "@/shared/header"
+
 export default function PortalUsuarioHome() {
     return (
         <div>
-            <h1>Hello usuario</h1>
+            <Header />
+            <div>
+                Salas
+            </div>
         </div>
     );
 }

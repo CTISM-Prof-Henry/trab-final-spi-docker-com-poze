@@ -23,8 +23,11 @@ export default function Header() {
             break;
         case false:
             return (
-                <div>
-                    <h1>Header User</h1>
+                <div className="w-full p-4 bg-blue-400 flex justify-center items-center gap-8">
+                    <HeaderLink href="/">Início</HeaderLink>
+                    <HeaderLink href="/agendar">Agendar</HeaderLink>
+                    <HeaderLink href="/meus-agendamentos">Meus Agendamentos</HeaderLink>
+                    <Profile />
                 </div>
             );
             break;
