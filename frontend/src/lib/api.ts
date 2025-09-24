@@ -13,7 +13,7 @@ api.interceptors.response.use(
         if (err.response.status === 401 && !original.retry) {
             original.retry = true;
             try {
-                await api.post("auth/refresh");
+                await api.post("/auth/refresh");
                 return api(original); // Refaz o request original.
             } catch (refreshError) {
                 console.error(refreshError);

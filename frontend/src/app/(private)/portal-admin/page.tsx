@@ -1,7 +1,12 @@
+import Header from "@/shared/header"
+
 export default function PortalAdminHome() {
     return (
         <div>
-            <h1>Hello admin</h1>
+            <Header />
+            <div>
+                Salas
+            </div>
         </div>
     );
 }

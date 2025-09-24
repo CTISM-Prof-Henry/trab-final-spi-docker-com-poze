@@ -30,7 +30,6 @@ export default function Login() {
             const res: AxiosResponse<LoginResponse> = await api.post("/auth/login", { matricula, password });
             sessionStorage.setItem("user_role", res.data.user.tipo);
             router.push("/");
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             setError(error.response.data.message || "Falha no login.");
         }

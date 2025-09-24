@@ -57,7 +57,7 @@ export class AuthController {
     
     }
 
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(JwtAuthGuard)
     @Post('logout')
     async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
         const { sub } = req.user as any;
