@@ -33,7 +33,7 @@ model User {
 }
 
 
-model Departamento {
+model Centro {
   id Int @id @default(autoincrement())
   nome String 
   localizacao String
@@ -44,8 +44,8 @@ model Sala {
   id Int @id @default(autoincrement())
   nome String
   capacidade Int
-  departamentoId Int
-  departamento Departamento @relation(fields: [departamentoId], references: [id])
+  centroId Int
+  centro Centro @relation(fields: [centroId], references: [id])
 
   Agendamento Agendamento[]
 }
