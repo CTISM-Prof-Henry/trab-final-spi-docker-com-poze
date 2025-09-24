@@ -11,12 +11,12 @@ export default function Header() {
         case true:
             return (
                 <div className="w-full p-4 bg-blue-400 flex justify-center items-center gap-8">
-                    <HeaderLink href="/">Home</HeaderLink>
-                    <HeaderLink href="/salas">Salas</HeaderLink>
-                    <HeaderLink href="/centros">Centros</HeaderLink>
-                    <HeaderLink href="/disciplinas">Disciplinas</HeaderLink>
-                    <HeaderLink href="/usuarios">Usuários</HeaderLink>
-                    <HeaderLink href="/agendamentos">Agendamentos</HeaderLink>
+                    <HeaderLink href="/portal-admin/">Home</HeaderLink>
+                    <HeaderLink href="/portal-admin/salas">Salas</HeaderLink>
+                    <HeaderLink href="/portal-admin/centros">Centros</HeaderLink>
+                    <HeaderLink href="/portal-admin/disciplinas">Disciplinas</HeaderLink>
+                    <HeaderLink href="/portal-admin/usuarios">Usuários</HeaderLink>
+                    <HeaderLink href="/portal-admin/agendamentos">Agendamentos</HeaderLink>
                     <Profile />
                 </div>
             );
