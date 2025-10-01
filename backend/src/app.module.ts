@@ -7,6 +7,7 @@ import { UserModule } from './module/user.module';
 import { LoginModule } from './module/login.module';
 import { AuthModule } from './auth/auth.module';
 import { CentroModule } from './module/centro.module';
+import { SalaModule } from './module/sala.module';
 
 dotenv.config({
   path: path.resolve(__dirname, '..', '.env'),
@@ -18,6 +19,7 @@ dotenv.config({
     LoginModule, 
     AuthModule,
     CentroModule,
+    SalaModule,
   ],
   controllers: [AppController],
   providers: [PrismaService],
