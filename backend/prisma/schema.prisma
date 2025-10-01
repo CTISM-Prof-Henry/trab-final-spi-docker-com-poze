@@ -29,7 +29,7 @@ model User {
   tipo      TipoUsuario
   hashedRt  String? // hashed refresh token
 
-  Agendamento Agendamento[]
+  agendamentos Agendamento[]
 }
 
 
@@ -37,7 +37,7 @@ model Centro {
   id Int @id @default(autoincrement())
   nome String 
   localizacao String
-  Sala Sala[]
+  salas Sala[]
 }
 
 model Sala {
@@ -47,7 +47,7 @@ model Sala {
   centroId Int
   centro Centro @relation(fields: [centroId], references: [id])
 
-  Agendamento Agendamento[]
+  agendamentos Agendamento[]
 }
 
 model Disciplina {
@@ -56,7 +56,7 @@ model Disciplina {
   codigo String @unique
   cargaHoraria Int
 
-  Agendamento Agendamento[]
+  agendamentos Agendamento[]
 }
 
 model Agendamento {
