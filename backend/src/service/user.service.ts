@@ -117,10 +117,11 @@ export class UserService {
                         const sala: SalaDTO = {
                             nome: `${letraPredio[predios]}0${andar}${salas < 10 ? '0' : ''}${salas}`,
                             capacidade: Math.floor(Math.random() * (60 - 20 + 1)) + 20,
+                            localizacao: `Prédio ${letraPredio[predios]} ${andar}° andar`,
                             centro: { id: qtdCentros + 1 }
                         }
 
-                        salasDTO.push(sala);                        
+                        salasDTO.push(sala);
                     }
                 }
             }
@@ -130,6 +131,7 @@ export class UserService {
             data: salasDTO.map(s => ({
                 nome: s.nome ?? "",
                 capacidade: s.capacidade ?? 0,
+                localizacao: s.localizacao ?? "",
                 centroId: s.centro?.id ?? 0
             })),
             skipDuplicates: true,
