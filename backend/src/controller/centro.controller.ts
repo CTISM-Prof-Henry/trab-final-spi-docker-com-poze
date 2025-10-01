@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { CentroDTO } from "src/core/dtos/centro.dto";
 import { CentroService } from "src/service/centro.service";
 
@@ -10,5 +10,10 @@ export class CentroController {
     @Post()
     createCentro(@Body() dto: CentroDTO) {
         return this.centroService.createCentro(dto);
+    }
+
+    @Get('find-all')
+    findAllCentros() {
+        return this.centroService.findAllCentros();
     }
 }

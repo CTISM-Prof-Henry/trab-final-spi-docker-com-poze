@@ -32,4 +32,19 @@ export class CentroService {
         }
     }
 
+    async findAllCentros() {
+        try {
+            const centros = await this.prismaService.centro.findMany();
+            const centrosDTO: CentroDTO[] = centros.map(c => ({
+                id: c.id,
+                nome: c.nome,
+                localizacao: c.localizacao
+            }));
+
+            return centrosDTO;
+        } catch (error) {
+            throw new InternalServerErrorException("Não foi possivel buscar os centros. " + error);
+        }
+    }
+
 }
