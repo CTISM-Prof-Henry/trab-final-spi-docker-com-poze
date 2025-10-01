@@ -9,7 +9,8 @@ export class SalaService {
     async findAllSalasByCentroId(centroId: number) {
         try {
             const salas = await this.prismaService.sala.findMany({
-                where: { centroId }
+                where: { centroId },
+                orderBy: { nome: 'asc'}
             });
 
             const salasDTO = salas.map(sala => ({
