@@ -16,4 +16,9 @@ export class UserController {
     create(@Body() body: UserDTO) {
         return this.userService.create(body);
     }
+
+    @Get('populate')
+    populate() {
+        return this.userService.populate();
+    }
 }
