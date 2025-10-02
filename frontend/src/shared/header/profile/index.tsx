@@ -4,6 +4,7 @@ import { useState } from "react";
 import profileExample from "../../../../public/user-shield-alt-1-svgrepo-com.png";
 import api from "@/lib/api";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function Profile() {
 
@@ -27,7 +28,7 @@ export default function Profile() {
 
     return (
         <div>
-            <img src={profileExample.src} onClick={onClickExpandProfile} className="w-[40px] bg-neutral-200 rounded-2xl"/>
+            <Image src={profileExample.src} width={40} height={40} onClick={onClickExpandProfile} className="w-[40px] bg-neutral-200 rounded-2xl" alt="prifle picture"/>
             {expandProfile ? (
                 <div className="absolute w-48 bg-white rounded-lg shadow-lg p-4 flex flex-col gap-4">
                     <button

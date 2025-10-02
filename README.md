@@ -50,7 +50,7 @@ npm i
 ```
 
 ```bash
-npm run dev
+npm run start
 ```
 
 Já no backend é necessario um terminal aberto para:

@@ -1,11 +1,16 @@
 'use client'
 
+import { useEffect, useState } from "react";
 import HeaderLink from "./header-link";
 import Profile from "./profile";
 
 export default function Header() {
 
-    const isAdmin = sessionStorage.getItem("user_role") === "ADMIN";
+    const [isAdmin, setIsAdmin] = useState<boolean>();
+
+    useEffect(() => {
+        setIsAdmin(sessionStorage.getItem("user_role") === "ADMIN");
+    }, []);
 
     switch (isAdmin) {
         case true:
