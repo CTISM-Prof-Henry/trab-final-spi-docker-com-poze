@@ -4,6 +4,7 @@ import { UserDTO } from "../core/dtos/user.dto";
 import * as bcrypt from "bcrypt";
 import { CentroDTO } from "src/core/dtos/centro.dto";
 import SalaDTO from "src/core/dtos/sala.dto";
+import { DisciplinaDTO } from "src/core/dtos/disciplina.dto";
 
 @Injectable()
 export class UserService {
@@ -100,6 +101,49 @@ export class UserService {
             },
         ];
 
+        const disciplinas: DisciplinaDTO[] = [
+            {
+                nome: "Programação Orientada a Objetos",
+                codigo: "INF101",
+                cargaHoraria: 60
+            },
+            {
+                nome: "Estruturas de Dados",
+                codigo: "INF102",
+                cargaHoraria: 80
+            },
+            {
+                nome: "Banco de Dados",
+                codigo: "INF103",
+                cargaHoraria: 60
+            },
+            {
+                nome: "Engenharia de Software",
+                codigo: "INF104",
+                cargaHoraria: 60
+            },
+            {
+                nome: "Redes de Computadores",
+                codigo: "INF105",
+                cargaHoraria: 70
+            },
+            {
+                nome: "Sistemas Operacionais",
+                codigo: "INF106",
+                cargaHoraria: 60
+            },
+            {
+                nome: "Desenvolvimento Web",
+                codigo: "INF107",
+                cargaHoraria: 80
+            },
+            {
+                nome: "Inteligência Artificial",
+                codigo: "INF108",
+                cargaHoraria: 60
+            }
+        ];
+
         const allCentros = await this.prismaService.centro.createMany({
             data: centros.map(c => ({
                 nome: c.nome ?? "",
@@ -136,6 +180,14 @@ export class UserService {
             })),
             skipDuplicates: true,
         });
+
+        const allDisciplinas = await this.prismaService.disciplina.createMany({
+            data: disciplinas.map(d => ({
+                nome: d.nome ?? "",
+                codigo: d.codigo ?? "",
+                cargaHoraria: d.cargaHoraria ?? 0
+            }))
+        })
 
         return "Banco de dados populado com centros e salas.";
     }
