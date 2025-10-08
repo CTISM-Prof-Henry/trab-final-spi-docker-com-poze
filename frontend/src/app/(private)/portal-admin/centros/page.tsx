@@ -28,6 +28,8 @@ export default function CentrosAdmin() {
 
     if (isLoading) {
         return <div>Loading...</div>;
+    }  else if (centros.length === 0) {
+        return <div className="p-4 w-full h-full text-center">Nenhum centro cadastrado</div>;
     } else {
         return (
             <div className="p-4 w-full h-full">
