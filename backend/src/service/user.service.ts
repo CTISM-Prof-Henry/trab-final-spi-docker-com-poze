@@ -16,7 +16,7 @@ export class UserService {
             const users = await this.prismaService.user.findMany();
             const usersDTO = users.map(user => {
                 const { uuid, name, email, matricula, tipo } = user;
-                return {  uuid, name, email, matricula, tipo };
+                return { uuid, name, email, matricula, tipo };
             })
 
             return usersDTO;
