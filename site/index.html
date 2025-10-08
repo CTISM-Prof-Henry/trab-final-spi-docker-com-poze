@@ -12,7 +12,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Welcome to MkDocs";
+        var mkdocs_page_name = "Home";
         var mkdocs_page_input_path = "index.md";
         var mkdocs_page_url = null;
       </script>
@@ -40,11 +40,17 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="#">Welcome to MkDocs</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Home</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#commands">Commands</a>
+    <li class="toctree-l2"><a class="reference internal" href="#sumario">Sumário</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#project-layout">Project layout</a>
+    <li class="toctree-l2"><a class="reference internal" href="#pre-requisitos">Pré-requisitos</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#instalacao">Instalação</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#instrucoes-de-uso">Instruções de Uso</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#contato">Contato</a>
     </li>
     </ul>
                 </li>
@@ -63,7 +69,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Welcome to MkDocs</li>
+      <li class="breadcrumb-item active">Home</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -72,21 +78,80 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
+                <p><a href="https://classroom.github.com/a/agg6sSBC"><img alt="Review Assignment Due Date" src="https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg" /></a></p>
+<h1 id="docker-com-poze">Docker com poze</h1>
+<p>Projeto desenvolvido para a cadeira de ES II.
+Sistema de agendamento de salas pois nosso grandioso colégio politécnico não conseguiu
+desenvolver isso ainda.</p>
+<h2 id="sumario">Sumário</h2>
 <ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
+<li><a href="#pré-requisitos">Pré-requisitos</a></li>
+<li><a href="#instalação">Instalação</a></li>
+<li><a href="#instruções-de-uso">Instruções de uso</a></li>
+<li><a href="#contato">Contato</a></li>
 </ul>
-<h2 id="project-layout">Project layout</h2>
-<div class="language-text highlight"><pre><span></span><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
-</code></pre></div>
+<h2 id="pre-requisitos">Pré-requisitos</h2>
+<p>Acredito que isso aqui seja bullshitagem, tem como rodar em qualquer torradeira, talvez oq mais pese seja o docker
+mas ai, da pra dar um jeito de abrir a docker engine só pelo temrinal se pesquisar um pouco...</p>
+<table>
+<thead>
+<tr>
+<th>Configuração</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sistema operacional</td>
+<td>Qualquer um</td>
+</tr>
+<tr>
+<td>Processador</td>
+<td>Qualquer um tbm</td>
+</tr>
+<tr>
+<td>Memória RAM</td>
+<td>4 ta bom</td>
+</tr>
+<tr>
+<td>Necessita rede?</td>
+<td>Não</td>
+</tr>
+</tbody>
+</table>
+<p>Apps necessários:
+ * Docker
+ * Node (22.14.0)</p>
+<h2 id="instalacao">Instalação</h2>
+<p>Como usar nosso projeto localmente.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/CTISM-Prof-Henry/trab-final-spi-docker-com-poze.git
+</span></code></pre></div>
+<h2 id="instrucoes-de-uso">Instruções de Uso</h2>
+<p>Abra a pasta do projeto, e siga os comandos.</p>
+<p>Dentro da pasta do frontend, para rodar é necessario:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>npm<span class="w"> </span>i
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>npm<span class="w"> </span>run<span class="w"> </span>start
+</span></code></pre></div>
+<p>Já no backend é necessario um terminal aberto para: <br>
+ * Docker <br>
+ * Backend em si</p>
+<p>Para rodar o banco (Lembrando que deve estar dentro da pasta backend):
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>up
+</span></code></pre></div></p>
+<p>E no outro terminal (com o banco de dados já levantado pelo container do docker)
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>npm<span class="w"> </span>i
+</span></code></pre></div></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>migrate<span class="w"> </span>dev
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>npm<span class="w"> </span>run<span class="w"> </span>start
+</span></code></pre></div>
+<p>Agora, pra popular o banco de dados, é só dar uma requisição do tipo get
+para o nosso backend /users/populate que fica na porta 9079, ou seja, cola no navegador
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>http://localhost:9079/users/populate
+</span></code></pre></div></p>
+<h2 id="contato">Contato</h2>
+<p>O repositório foi originalmente desenvolvido por time gue10: <a href="">joao.guedes@acad.ufsm.br</a></p>
               
             </div>
           </div><footer>
@@ -130,5 +195,5 @@ docs/
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2025-10-08 13:50:32.782668+00:00
+Build Date UTC : 2025-10-08 14:08:51.375486+00:00
 -->
