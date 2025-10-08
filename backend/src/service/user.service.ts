@@ -187,7 +187,7 @@ export class UserService {
                 codigo: d.codigo ?? "",
                 cargaHoraria: d.cargaHoraria ?? 0
             }))
-        })
+        });
 
         return "Banco de dados populado com centros e salas.";
     }
