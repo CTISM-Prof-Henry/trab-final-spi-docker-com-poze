@@ -1,4 +1,5 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Body, Controller, Get, Param } from "@nestjs/common";
+import { PaginationDTO } from "src/core/dtos/pagination.dto";
 import { SalaService } from "src/service/sala.service";
 
 @Controller('sala')
@@ -9,5 +10,10 @@ export class SalaController {
     @Get('find-all-by-centro-id/:centroId')
     findAllByCentroId(@Param('centroId') centroId: number) {
         return this.salaService.findAllSalasByCentroId(Number(centroId));
+    }
+
+    @Get('find-all/paginated')
+    findAllPaginated(@Body() paginationDTO: PaginationDTO) {
+        return this.salaService.findAllSalasPaginated(paginationDTO);
     }
 }
