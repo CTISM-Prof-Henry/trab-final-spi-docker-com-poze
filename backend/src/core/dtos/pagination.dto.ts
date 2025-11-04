@@ -6,5 +6,5 @@ export class PaginationDTO {
     limit?: number;
     @IsOptional()
     @Min(0)
-    offset?: number;
+    page?: number;
 }

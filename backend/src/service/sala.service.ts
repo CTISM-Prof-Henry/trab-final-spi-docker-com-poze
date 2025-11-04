@@ -29,7 +29,24 @@ export class SalaService {
 
     async findAllSalasPaginated(paginationDTO: PaginationDTO) {
         try {
-            const [salas, total] = await this.prismaService.sala.findMany();
+            const skip = (paginationDTO.page!) * paginationDTO.limit!;
+            const [salas, total] = await Promise.all([
+                this.prismaService.sala.findMany({
+                    skip,
+                    take: paginationDTO.limit,
+                    orderBy: { nome: 'asc' }
+                }), this.prismaService.sala.count()
+            ]);
+
+            return {
+                message: "Usuários encontrados com sucesso!",
+                data: {
+                    total,
+                    page: paginationDTO.page,
+                    lastPage: Math.ceil(total / paginationDTO.limit!),
+                    salas
+                },
+            };
         } catch (error) {
             throw new InternalServerErrorException("Ocorreu um erro ao tentar busar." + error);
         }
