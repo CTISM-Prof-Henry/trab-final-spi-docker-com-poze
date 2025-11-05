@@ -34,7 +34,17 @@ export class SalaService {
                 this.prismaService.sala.findMany({
                     skip,
                     take: paginationDTO.limit,
-                    orderBy: { nome: 'asc' }
+                    include: {
+                        centro: true
+                    },
+                    orderBy: [
+                        { nome: 'asc' },
+                        {
+                            centro: { 
+                                nome: 'asc' 
+                            }
+                        }
+                    ],
                 }), this.prismaService.sala.count()
             ]);
 
@@ -48,7 +58,7 @@ export class SalaService {
                 },
             };
         } catch (error) {
-            throw new InternalServerErrorException("Ocorreu um erro ao tentar busar." + { error });
+            throw new InternalServerErrorException("Ocorreu um erro ao tentar busar." + error);
         }
     }
 }
