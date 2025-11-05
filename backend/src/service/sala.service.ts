@@ -39,7 +39,7 @@ export class SalaService {
             ]);
 
             return {
-                message: "Usuários encontrados com sucesso!",
+                message: "Salas encontradas com sucesso!",
                 data: {
                     total,
                     page: paginationDTO.page,
@@ -48,7 +48,7 @@ export class SalaService {
                 },
             };
         } catch (error) {
-            throw new InternalServerErrorException("Ocorreu um erro ao tentar busar." + error);
+            throw new InternalServerErrorException("Ocorreu um erro ao tentar busar." + { error });
         }
     }
 }

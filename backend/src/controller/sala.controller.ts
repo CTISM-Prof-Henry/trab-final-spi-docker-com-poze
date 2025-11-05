@@ -12,8 +12,11 @@ export class SalaController {
         return this.salaService.findAllSalasByCentroId(Number(centroId));
     }
 
-    @Get('find-all/paginated')
-    findAllPaginated(@Body() paginationDTO: PaginationDTO) {
+    @Get('find-all/paginated/:page/:limit')
+    findAllPaginated(@Param("page") page: number, @Param("limit") limit: number) {
+        let paginationDTO = new PaginationDTO();
+        paginationDTO.limit = Number(limit);
+        paginationDTO.page = Number(page);
         return this.salaService.findAllSalasPaginated(paginationDTO);
     }
 }
