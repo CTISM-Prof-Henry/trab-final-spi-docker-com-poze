@@ -4,6 +4,7 @@ import { SalaDTO } from "@/app/core/dto/sala.dto";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import api from "@/lib/api";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { v4 } from "uuid";
 
@@ -35,6 +36,22 @@ export default function AdminSalas() {
         fetchSalasPaginated();
     }, []);
 
+    const fetchSalasPaginated = (pageNumber: number) => async (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setPage(pageNumber);
+        try {
+            const response = await api.get(`/sala/find-all/paginated/${pageNumber}/${limit}`);
+            setSalas(response.data.data.salas);
+            setIsLoading(false);
+            setPage(Number(response.data.data.page));
+            setLastPage(Number(response.data.data.lastPage));
+        } catch(error) {
+            console.error("Erro ao buscar salas: " + error)
+            setIsLoading(false);
+        }
+    }
+
     if (isLoading) {
         return (
             <div>Carregando...</div>
@@ -65,15 +82,44 @@ export default function AdminSalas() {
                 <div>
                     <Pagination>
                         <PaginationContent>
-                            <PaginationPrevious/>
+                            <PaginationPrevious onClick={page - 1 < 0 ? fetchSalasPaginated(page) : fetchSalasPaginated(page - 1)}/>
                             <PaginationItem>
-                                <PaginationContent>{page}</PaginationContent>
+                                <PaginationContent>
+                                    <Link href="#" onClick={fetchSalasPaginated(page)}>
+                                        {page + 1}
+                                    </Link>
+                                </PaginationContent>
                             </PaginationItem>
+                            {page + 1 < lastPage && 
                             <PaginationItem>
-                                <PaginationEllipsis/>
-                            </PaginationItem>
+                                <PaginationContent>
+                                     <Link href="#" onClick={fetchSalasPaginated(page + 1)}>
+                                        {page + 2}
+                                    </Link>
+                                </PaginationContent>
+                            </PaginationItem>}
+                            {page + 2 < lastPage && page + 3 < lastPage &&
+                            <PaginationItem>
+                                <PaginationContent>
+                                     <Link href="#" onClick={fetchSalasPaginated(page + 2)}>
+                                        {page + 3}
+                                    </Link>
+                                </PaginationContent>
+                            </PaginationItem>}
+                            {page != lastPage - 1 && page + 2 < lastPage && page + 3 < lastPage &&
+                            <PaginationItem>
+                                <PaginationEllipsis />    
+                            </PaginationItem>}
+                            {page != lastPage - 1 && page + 2 < lastPage &&
+                            <PaginationItem>
+                                <PaginationContent>
+                                    <Link href="#" onClick={fetchSalasPaginated(lastPage - 1)}>
+                                        {lastPage}
+                                    </Link>
+                                </PaginationContent>
+                            </PaginationItem>}
                             <PaginationContent>
-                                <PaginationNext/>
+                                <PaginationNext onClick={page + 1 >= lastPage ? fetchSalasPaginated(page) : fetchSalasPaginated(page + 1)}/>
                             </PaginationContent>
                         </PaginationContent>
                     </Pagination>
