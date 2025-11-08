@@ -27,7 +27,6 @@ export default function CentrosAdmin() {
         fetchCentros();
     }, []);
 
-    // Função para gerar cor única baseada no nome do centro
     const getCenterColor = (nome: string) => {
         const colors = [
             "from-emerald-500 to-teal-600",
@@ -66,8 +65,6 @@ export default function CentrosAdmin() {
                 <div className="w-full max-w-6xl">
                     <h1 className="text-3xl font-bold text-gray-800 mb-2">Gerenciamento de Centros</h1>
                     <p className="text-gray-600">Lista de todos os centros universitários cadastrados</p>
-                    
-                    {/* Estatísticas Rápidas */}
                     <div className="mt-4 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg border border-emerald-200">
                         <div className="flex items-center gap-6 text-sm text-emerald-800">
                             <div className="flex items-center gap-2">
@@ -81,8 +78,6 @@ export default function CentrosAdmin() {
                         </div>
                     </div>
                 </div>
-
-                {/* Tabela Estilizada */}
                 <div className="w-full max-w-6xl bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
                     <Table className="w-full">
                         <TableHeader className="bg-gradient-to-r from-emerald-600 to-teal-700">
@@ -157,8 +152,6 @@ export default function CentrosAdmin() {
                         </TableBody>
                     </Table>
                 </div>
-
-                {/* Cards de Estatísticas */}
                 <div className="w-full max-w-6xl">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">

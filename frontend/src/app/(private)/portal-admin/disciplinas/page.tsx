@@ -27,33 +27,209 @@ export default function DisciplinasAdmin() {
         fetchDisciplinas();
     }, []);
 
+    // Função para gerar cor única baseada no nome da disciplina
+    const getDisciplinaColor = (nome: string) => {
+        const colors = [
+            "from-blue-500 to-cyan-600",
+            "from-purple-500 to-indigo-600",
+            "from-orange-500 to-red-600",
+            "from-green-500 to-emerald-600",
+            "from-pink-500 to-rose-600",
+            "from-yellow-500 to-amber-600",
+            "from-teal-500 to-cyan-600",
+            "from-violet-500 to-purple-600"
+        ];
+        const index = nome?.length % colors.length || 0;
+        return colors[index];
+    };
+
+    const getCargaHorariaBadge = (cargaHoraria: number) => {
+        if (cargaHoraria <= 40) {
+            return "bg-blue-100 text-blue-800 border-blue-200";
+        } else if (cargaHoraria <= 80) {
+            return "bg-green-100 text-green-800 border-green-200";
+        } else if (cargaHoraria <= 120) {
+            return "bg-amber-100 text-amber-800 border-amber-200";
+        } else {
+            return "bg-red-100 text-red-800 border-red-200";
+        }
+    };
+
+    const totalCargaHoraria = disciplinas.reduce((sum, disc) => sum + (disc.cargaHoraria || 0), 0);
+    const mediaCargaHoraria = disciplinas.length > 0 ? totalCargaHoraria / disciplinas.length : 0;
+    const disciplinasLongas = disciplinas.filter(disc => (disc.cargaHoraria || 0) > 80).length;
+
     if (isLoading) {
-        return (
-            <LoadComponent />
-        );
+        return <LoadComponent />;
     } else if (disciplinas.length === 0) {
-        return <div className="p-4 w-full h-full text-center">Nenhuma disciplina cadastrada</div>;
+        return (
+            <div className="flex flex-col items-center justify-center p-12 bg-gray-50 min-h-screen">
+                <div className="text-center">
+                    <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-700 mb-2">Nenhuma disciplina encontrada</h3>
+                    <p className="text-gray-500">Não há disciplinas cadastradas no sistema no momento.</p>
+                </div>
+            </div>
+        );
     } else {
-         return (
-            <div className="p-4 w-full h-full">
-                <Table className="max-w-lg mx-auto border border-neutral-800">
-                    <TableHeader className="w-[100px] bg-gray-200">
-                        <TableRow>
-                            <TableHead>Nome</TableHead>
-                            <TableHead>Endereço</TableHead>
-                            <TableHead>Carga Horária</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {disciplinas.map((disciplina) => (
-                            <TableRow key={v4()} className="hover:bg-neutral-200">
-                                <TableCell>{disciplina.nome}</TableCell>
-                                <TableCell>{disciplina.codigo}</TableCell>
-                                <TableCell>{disciplina.cargaHoraria}</TableCell>
+        return (
+            <div className="p-6 w-full h-full flex flex-col items-center gap-8 bg-gray-50 min-h-screen">
+                {/* Header */}
+                <div className="w-full max-w-6xl">
+                    <h1 className="text-3xl font-bold text-gray-800 mb-2">Gerenciamento de Disciplinas</h1>
+                    <p className="text-gray-600">Lista de todas as disciplinas acadêmicas cadastradas</p>                    
+                    <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
+                        <div className="flex flex-wrap items-center gap-6 text-sm text-blue-800">
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                <span>Total de disciplinas: <strong>{disciplinas.length}</strong></span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                <span>Média de carga horária: <strong>{mediaCargaHoraria.toFixed(0)}h</strong></span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 bg-amber-500 rounded-full"></div>
+                                <span>Disciplinas longas (+80h): <strong>{disciplinasLongas}</strong></span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                                <span>Carga horária total: <strong>{totalCargaHoraria}h</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="w-full max-w-6xl bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+                    <Table className="w-full">
+                        <TableHeader className="bg-gradient-to-r from-blue-600 to-cyan-700">
+                            <TableRow className="border-none hover:bg-transparent">
+                                <TableHead className="text-white font-bold text-sm py-4 border-r border-blue-500">
+                                    <div className="flex items-center gap-2">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                        </svg>
+                                        <span>Disciplina</span>
+                                    </div>
+                                </TableHead>
+                                <TableHead className="text-white font-bold text-sm py-4 border-r border-blue-500">
+                                    <div className="flex items-center gap-2">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                                        </svg>
+                                        <span>Código</span>
+                                    </div>
+                                </TableHead>
+                                <TableHead className="text-white font-bold text-sm py-4">
+                                    <div className="flex items-center gap-2 justify-center">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span>Carga Horária</span>
+                                    </div>
+                                </TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {disciplinas.map((disciplina, index) => (
+                                <TableRow 
+                                    key={v4()} 
+                                    className={`
+                                        transition-all duration-200 border-b border-gray-100
+                                        ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                                        hover:bg-blue-50 hover:shadow-sm
+                                    `}
+                                >
+                                    <TableCell className="py-4 border-r border-gray-100">
+                                        <div className="flex items-center gap-4">
+                                            <div className={`w-12 h-12 bg-gradient-to-r ${getDisciplinaColor(disciplina.nome!)} rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md`}>
+                                                {disciplina.nome?.charAt(0).toUpperCase() || 'D'}
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="flex items-center gap-3">
+                                                    <span className="font-bold text-gray-800 text-lg">{disciplina.nome}</span>
+                                                    <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">
+                                                        Ativa
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center gap-2 mt-1">
+                                                    <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="py-4 border-r border-gray-100">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-mono text-gray-700 bg-gray-100 px-3 py-2 rounded-lg text-sm border border-gray-200">
+                                                {disciplina.codigo || 'N/A'}
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="py-4">
+                                        <div className="flex justify-center">
+                                            <span className={`px-4 py-2 rounded-full text-sm font-bold border-2 ${getCargaHorariaBadge(disciplina.cargaHoraria!)}`}>
+                                                <div className="flex items-center gap-2">
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    {disciplina.cargaHoraria}h
+                                                </div>
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+                <div className="w-full max-w-6xl">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+                            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                            </div>
+                            <div className="text-3xl font-bold text-gray-800">{disciplinas.length}</div>
+                            <div className="text-gray-600">Total de Disciplinas</div>
+                        </div>
+                        
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+                            <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div className="text-3xl font-bold text-gray-800">{mediaCargaHoraria.toFixed(0)}h</div>
+                            <div className="text-gray-600">Média de Carga Horária</div>
+                        </div>
+                        
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+                            <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                            </div>
+                            <div className="text-3xl font-bold text-gray-800">{disciplinasLongas}</div>
+                            <div className="text-gray-600">Disciplinas Longas</div>
+                        </div>
+                        
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+                            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                            <div className="text-3xl font-bold text-gray-800">{totalCargaHoraria}h</div>
+                            <div className="text-gray-600">Carga Horária Total</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );       
     }

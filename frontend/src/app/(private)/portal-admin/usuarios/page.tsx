@@ -27,7 +27,6 @@ export default function UsuariosAdmin() {
         fetchUsers();
     }, []);
 
-    // Função para estilizar o tipo de usuário
     const getTipoBadge = (tipo: string) => {
         const tipoLower = tipo?.toLowerCase() || '';
         const styles = {
