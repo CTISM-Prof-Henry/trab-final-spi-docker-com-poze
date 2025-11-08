@@ -3,6 +3,7 @@
 import UserDTO from "@/app/core/dto/user.dto";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import api from "@/lib/api";
+import LoadComponent from "@/shared/load";
 import { useEffect, useState } from "react";
 import { v4 } from "uuid";
 
@@ -28,7 +29,7 @@ export default function UsuariosAdmin() {
 
     if (isLoading) {
         return (
-            <div>Loading...</div>
+            <LoadComponent />
         );
     } else if (users.length === 0) {
         return (

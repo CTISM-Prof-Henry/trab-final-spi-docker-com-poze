@@ -3,6 +3,7 @@
 import { DisciplinaDTO } from "@/app/core/dto/disciplina.dto";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import api from "@/lib/api";
+import LoadComponent from "@/shared/load";
 import { useEffect, useState } from "react";
 import { v4 } from "uuid";
 
@@ -27,7 +28,9 @@ export default function DisciplinasAdmin() {
     }, []);
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return (
+            <LoadComponent />
+        );
     } else if (disciplinas.length === 0) {
         return <div className="p-4 w-full h-full text-center">Nenhuma disciplina cadastrada</div>;
     } else {
