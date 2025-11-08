@@ -8,7 +8,9 @@ import { RtStrategy } from "./strategies/rt.strategy";
 import { PrismaService } from "src/database/prisma.service";
 
 @Module({
-    imports: [JwtModule.register({})],
+    imports: [
+        JwtModule.register({}),
+    ],
     controllers: [AuthController],
     providers: [
         AuthService, 

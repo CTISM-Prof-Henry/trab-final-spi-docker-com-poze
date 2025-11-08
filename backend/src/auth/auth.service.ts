@@ -25,15 +25,20 @@ export class AuthService {
     }
 
     async signTokens(userId: number, matricula: string, tipo: TipoUsuario) {
-        const payload = { sub: userId, matricula, tipo };
+        const payload = {
+            sub: userId,
+            matricula: matricula,
+            tipo: tipo
+        };
+
         const [access_token, refresh_token] = await Promise.all([
             this.jwtService.signAsync(payload, {
                 secret: process.env.JWT_ACCESS_SECRET,
-                expiresIn: process.env.ACCESS_TOKEN_TTL || '15m'
+                expiresIn: '1d'
             }),
             this.jwtService.signAsync(payload, {
                 secret: process.env.JWT_REFRESH_SECRET,
-                expiresIn: process.env.REFRESH_TOKEN_TTL || '7d'
+                expiresIn: '7d'
             }),
         ]);
 
@@ -76,5 +81,4 @@ export class AuthService {
             data: { hashedRt: null },
         });
     }
-
 }
