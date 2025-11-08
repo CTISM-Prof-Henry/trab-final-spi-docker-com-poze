@@ -29,6 +29,7 @@ export default function Login() {
         try {
             const res: AxiosResponse<LoginResponse> = await api.post("/auth/login", { matricula, password });
             sessionStorage.setItem("user_role", res.data.user.tipo);
+            sessionStorage.setItem("user_props", JSON.stringify({ nome: res.data.user.name, matricula: res.data.user.matricula, email: res.data.user.email }));
             router.push("/");
         } catch (error: any) {
             setError(error.response.data.message || "Falha no login.");
