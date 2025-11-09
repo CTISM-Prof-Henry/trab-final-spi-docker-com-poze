@@ -78,8 +78,8 @@ export default function CentrosAdmin() {
                         setIsLoading(true);
                         const response = await api.delete(`/centro/${centro.id}`);
                         Swal.fire({
-                        title: "Centro deletado com sucesso.",
-                        icon: "success"
+                            title: "Centro deletado com sucesso.",
+                            icon: "success"
                         });
                         fetchCentros();
                     } catch (error: any) {
