@@ -52,6 +52,7 @@ export class CentroService {
             await this.prismaService.centro.delete({
                 where: { id: centroId }
             });
+            return "Centro deletado com sucesso.";
         } catch (error) {
             throw new InternalServerErrorException("Não foi possivel deletar o centro. " + error);
         }

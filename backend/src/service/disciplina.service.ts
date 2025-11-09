@@ -20,4 +20,48 @@ export class DisciplinaService {
             throw new InternalServerErrorException('Não foi possivel encontrar as disciplinas.');
         }
     }
+
+    async create(dto: DisciplinaDTO) {
+        try {
+            if (!dto.nome || !dto.codigo || !dto.cargaHoraria) {
+                throw new InternalServerErrorException('É preciso enviar nome, código e carga horária para criar uma disciplina.');
+            }
+
+            const alreadyExists = await this.prismaService.disciplina.findFirst({
+                where: { codigo: dto.codigo }
+            });
+
+            if (alreadyExists) {
+                throw new InternalServerErrorException('Já existe uma disciplina com esse código.');
+            }
+
+            const created = await this.prismaService.disciplina.create({
+                data: {
+                    nome: dto.nome,
+                    codigo: dto.codigo,
+                    cargaHoraria: dto.cargaHoraria
+                }
+            });
+
+            return created;
+        } catch(error) {
+            throw new InternalServerErrorException('Não foi possivel criar a disciplina. ' + error);
+        }
+    }
+
+    async deleteById(disciplinaId: number) {
+        try {
+            await this.prismaService.disciplina.delete({
+                where: { id: disciplinaId }
+            });
+            return "Disciplina deletada com sucesso.";
+        } catch (error) {
+            throw new InternalServerErrorException('Não foi possivel deletar a disciplina.');
+        }
+    }
+
+    async updateById(disciplinaId: number) {
+        //TODO: implementar
+        return;
+    }
 }
