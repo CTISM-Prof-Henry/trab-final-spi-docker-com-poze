@@ -14,7 +14,7 @@ function setAuthCookies(res: Response, at: string, rt: string) {
         path: '/',
     };
 
-    res.cookie('access_token', at, { ...common, maxAge: 1000 * 60 * 15 }); // 15 minutes
+    res.cookie('access_token', at, { ...common, maxAge: 1000 * 60 * 60 * 24 }); // 1 day
     res.cookie('refresh_token', rt, { ...common, maxAge: 1000 * 60 * 60 * 24 * 7 }); // 7 day
 }
 
