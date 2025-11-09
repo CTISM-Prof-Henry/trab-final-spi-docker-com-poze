@@ -23,7 +23,7 @@ export class DisciplinaController {
     }
 
     @Patch(':id')
-    updateById(@Param('id') disciplinaId: number) {
-        return this.disciplinaService.updateById(Number(disciplinaId));
+    updateById(@Param('id') disciplinaId: number, @Body() dto: DisciplinaDTO) {
+        return this.disciplinaService.updateById(Number(disciplinaId), dto);
     }
 }

@@ -60,8 +60,20 @@ export class DisciplinaService {
         }
     }
 
-    async updateById(disciplinaId: number) {
-        //TODO: implementar
-        return;
+    async updateById(disciplinaId: number, dto: DisciplinaDTO) {
+        if (!dto.nome || !dto.codigo || !dto.cargaHoraria) {
+            throw new InternalServerErrorException('É preciso enviar nome, código e carga horária para atualizar uma disciplina.');
+        }
+
+        const disciplina =  await this.prismaService.disciplina.update({
+            where: { id: disciplinaId },
+            data: {
+                nome: dto.nome,
+                codigo: dto.codigo,
+                cargaHoraria: dto.cargaHoraria
+            }
+        });
+
+        return disciplina;
     }
 }
