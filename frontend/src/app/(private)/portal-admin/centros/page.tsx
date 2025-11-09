@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import CreateCentroModal from "./create-centro-modal";
 import EditCentroModal from "./edit-centro-modal";
+import Swal from "sweetalert2";
 
 export default function CentrosAdmin() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -63,16 +64,38 @@ export default function CentrosAdmin() {
 
     const onClickMakeAction = async (action: "edit" | "delete", centro: CentroDTO) => {
         if (action === "delete") {
-            setIsLoading(true);
-            try {
-                const response = await api.delete(`/centro/${centro.id}`);
-                console.log(response);
-                fetchCentros();
-            } catch (error) {
-                console.error("Error deleting centro:", error);
-            } finally {
-                setIsLoading(false);
-            }
+            Swal.fire({
+                title: "Você tem certeza?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim.",
+                cancelButtonText: "Cancelar"
+                }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        setIsLoading(true);
+                        const response = await api.delete(`/centro/${centro.id}`);
+                        Swal.fire({
+                        title: "Centro deletado com sucesso.",
+                        icon: "success"
+                        });
+                        fetchCentros();
+                    } catch (error: any) {
+                        console.error("Error deleting centro:", error);
+                        Swal.fire({
+                        title: "Erro ao deletar centro.",
+                        text: error.response?.data?.message || "Tente novamente mais tarde.",
+                        icon: "error"
+                        });
+                    } finally {
+                        setIsLoading(false);
+                    }
+
+                }
+            });
+            
         } else if (action === "edit") {
             setEditingCentro(centro);
             setIsEditModalOpen(true);
