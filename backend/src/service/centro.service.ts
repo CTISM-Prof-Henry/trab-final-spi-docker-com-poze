@@ -47,4 +47,30 @@ export class CentroService {
         }
     }
 
+    async deleteCentroById(centroId: number) {
+        try {
+            await this.prismaService.centro.delete({
+                where: { id: centroId }
+            });
+        } catch (error) {
+            throw new InternalServerErrorException("Não foi possivel deletar o centro. " + error);
+        }
+    }
+
+    async updateCentroById(centroId: number, dto: CentroDTO) {
+        try {
+            if (!dto.nome || !dto.localizacao) {
+                throw new BadRequestException("É preciso enviar nome e localização para criar um centro.");
+            }
+            return await this.prismaService.centro.update({
+                where: { id: centroId },
+                data: {
+                    nome: dto.nome,
+                    localizacao: dto.localizacao,
+                }
+            });
+        } catch (error) {
+            throw new InternalServerErrorException("Não foi possivel atualizar o centro. " + error);
+        }
+    }
 }

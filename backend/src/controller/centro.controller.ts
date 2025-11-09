@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { CentroDTO } from "src/core/dtos/centro.dto";
 import { CentroService } from "src/service/centro.service";
 
@@ -16,4 +16,15 @@ export class CentroController {
     findAllCentros() {
         return this.centroService.findAllCentros();
     }
+
+    @Delete(':id')
+    deleteCentroById(@Param('id') centroId: number) {
+        return this.centroService.deleteCentroById(Number(centroId));
+    }
+
+    @Patch(':id')
+    updateCentroById(@Param('id') centroId: number, @Body() dto: CentroDTO) {
+        return this.centroService.updateCentroById(Number(centroId), dto);
+    }
+
 }
