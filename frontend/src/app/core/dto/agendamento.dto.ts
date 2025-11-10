@@ -5,7 +5,7 @@ import UserDTO from "./user.dto"
 
 export class AgendamentoDTO {
     id?: number;
-    data?: Date;
+    date?: Date;
     horaInicio?: string;
     horaFim?: string;
     status?: StatusAgendamento;
