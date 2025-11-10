@@ -44,7 +44,7 @@ export class AuthController {
     async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
         const payload = req.user as UserDTO;
         const rt = req.cookies['refresh_token'];
-        const tokens = await this.authService.refreshTokens(payload.id, rt);
+        const tokens = await this.authService.refreshTokens(payload.id!, rt);
         setAuthCookies(res, tokens.access_token, tokens.refresh_token);
         return { ok: true };
     }

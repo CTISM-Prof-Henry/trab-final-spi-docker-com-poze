@@ -5,7 +5,7 @@ import { DisciplinaDTO } from "./disciplina.dto";
 
 export class AgendamentoDTO {
     id?: number;
-    date?: Date;
+    data?: Date;
     horaInicio?: string;
     horaFim?: string;
     status?: StatusAgendamento;

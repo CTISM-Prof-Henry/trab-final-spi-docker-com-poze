@@ -54,8 +54,8 @@ export class AuthService {
     }
 
     async login(user: UserDTO) {
-        const tokens = await this.signTokens(user.id, user.matricula, user.tipo);
-        await this.updateRtHash(user.id, tokens.refresh_token);
+        const tokens = await this.signTokens(user.id!, user.matricula!, user.tipo!);
+        await this.updateRtHash(user.id!, tokens.refresh_token);
         return tokens;
     }
 
