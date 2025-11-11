@@ -26,7 +26,7 @@ para sua execução (por exemplo, placa de vídeo dedicada):
 
 Apps necessários:
  * Docker
- * Node (22.14.0)
+ * Node (22.16.0)
 
 ## Instalação
 
@@ -74,6 +74,14 @@ npx prisma migrate dev
 ```bash
 npm run start
 ```
+
+E cola isso aqui no navegador:
+```bash
+http://localhost:9079/users/populate
+```
+
+Pronto! Nosso projeto está rodando e está pronto para ser utilizado.
+Só acessar o link: http://localhost:3000
 
 ## Contato
 
