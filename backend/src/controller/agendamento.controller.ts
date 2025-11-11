@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { AgendamentoDTO } from "src/core/dtos/agendamento.dto";
 import { AgendamentoService } from "src/service/agendamento.service";
 
@@ -20,6 +20,11 @@ export class AgendamentoController {
     @Delete(':id')
     deleteById(@Param('id') agendamentoId: number) {
         return this.agendamentoService.deleteById(Number(agendamentoId));
+    }
+
+    @Patch(':id')
+    updateById(@Param('id') agendamentoId: number, @Body() dto: AgendamentoDTO) {
+        return this.agendamentoService.updateById(Number(agendamentoId), dto);
     }
 
 }

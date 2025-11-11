@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { StatusAgendamento, TipoUsuario } from "@prisma/client";
 import { AgendamentoDTO } from "src/core/dtos/agendamento.dto";
 import { PrismaService } from "src/database/prisma.service";
@@ -39,6 +39,13 @@ export class AgendamentoService {
         if (!dto.data || !dto.horaInicio || !dto.horaFim || !dto.user || !dto.sala || !dto.disciplina) {
             throw new Error('Dados incompletos para criar agendamento.');
         }
+        const user = await this.prismaService.user.findUnique({
+            where: { uuid: dto.user.uuid! }
+        });
+        if (!user) {
+            throw new Error('Usuário não encontrado.');
+        }
+        dto.user.id = user.id;
         const status = dto.user.tipo === TipoUsuario.ALUNO ? StatusAgendamento.PENDENTE : StatusAgendamento.CONFIRMADO;
         const agendamento = await this.prismaService.agendamento.create({
             data: {
@@ -85,4 +92,44 @@ export class AgendamentoService {
         return "Agendamento deletado com sucesso.";
     }
 
+    async updateById(idAgendamento: number, dto: AgendamentoDTO) {
+        if (!dto.data || !dto.horaInicio || !dto.horaFim || !dto.disciplina) {
+            throw new BadRequestException('Dados incompletos para atualizar agendamento.');
+        }
+        
+        const agendamento = await this.prismaService.agendamento.update({
+            where: { id: idAgendamento },
+            data: {
+                data: dto.data,
+                horaInicio: dto.horaInicio,
+                horaFim: dto.horaFim,
+                disciplinaId: dto.disciplina.id!,
+            },
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                        email: true,
+                        matricula: true,
+                        tipo: true,
+                    }
+                },
+                sala: true,
+                disciplina: true,
+            }
+        });
+        
+        const updatedDto: AgendamentoDTO = {
+            id: agendamento.id,
+            data: agendamento.data,
+            horaInicio: agendamento.horaInicio.toString(),
+            horaFim: agendamento.horaFim.toString(),
+            status: agendamento.status,
+            user: agendamento.user,
+            sala: agendamento.sala,
+            disciplina: agendamento.disciplina,
+        };
+        
+        return updatedDto;
+    }
 }
