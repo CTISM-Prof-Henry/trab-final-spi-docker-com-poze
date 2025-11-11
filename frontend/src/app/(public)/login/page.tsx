@@ -36,7 +36,8 @@ export default function Login() {
             sessionStorage.setItem("user_props", JSON.stringify({ 
                 nome: res.data.user.name, 
                 matricula: res.data.user.matricula, 
-                email: res.data.user.email 
+                email: res.data.user.email,
+                uuid: res.data.user.uuid
             }));
             router.push("/");
         } catch (error: any) {
