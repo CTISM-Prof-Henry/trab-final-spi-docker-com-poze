@@ -153,7 +153,7 @@ export default function PortalUsuarioHome() {
                 </div>
                 <Button 
                     onClick={navigateToAgendamentos}
-                    className="bg-purple-600 hover:bg-purple-700"
+                    className="bg-purple-600 hover:bg-purple-700 text-white"
                 >
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -372,7 +372,7 @@ export default function PortalUsuarioHome() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-white">
                         <Button 
                             className="h-16 flex-col gap-2 bg-blue-600 hover:bg-blue-700"
                             onClick={navigateToAgendamentos}
