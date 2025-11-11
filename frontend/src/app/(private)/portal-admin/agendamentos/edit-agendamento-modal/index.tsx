@@ -22,6 +22,7 @@ export default function EditAgendamentoModal({ isOpen, onClose, onAgendamentoUpd
         data: '',
         horaInicio: '',
         horaFim: '',
+        status: 'PENDENTE',
         disciplinaId: ''
     });
     const [errors, setErrors] = useState({
@@ -45,6 +46,7 @@ export default function EditAgendamentoModal({ isOpen, onClose, onAgendamentoUpd
                 data: dataFormatada,
                 horaInicio: agendamento.horaInicio ? formatTimeForInput(agendamento.horaInicio) : '',
                 horaFim: agendamento.horaFim ? formatTimeForInput(agendamento.horaFim) : '',
+                status: agendamento.status || 'PENDENTE',
                 disciplinaId: agendamento.disciplina?.id?.toString() || ''
             });
             setErrors({ 
@@ -113,6 +115,7 @@ export default function EditAgendamentoModal({ isOpen, onClose, onAgendamentoUpd
             data: '',
             horaInicio: '',
             horaFim: '',
+            status: '',
             disciplinaId: ''
         };
 
@@ -128,6 +131,10 @@ export default function EditAgendamentoModal({ isOpen, onClose, onAgendamentoUpd
             newErrors.horaFim = 'A hora de fim é obrigatória';
         } else if (formData.horaInicio && formData.horaFim <= formData.horaInicio) {
             newErrors.horaFim = 'A hora de fim deve ser depois da hora de início';
+        }
+
+        if (!formData.status) {
+            newErrors.status = 'O status é obrigatório';
         }
 
         if (!formData.disciplinaId) {
@@ -161,6 +168,7 @@ export default function EditAgendamentoModal({ isOpen, onClose, onAgendamentoUpd
                 data: dataObj.toISOString(),
                 horaInicio: horaInicioDate.toISOString(),
                 horaFim: horaFimDate.toISOString(),
+                status: formData.status,
                 disciplina:  {
                     id: parseInt(formData.disciplinaId),
                 }
@@ -228,6 +236,23 @@ export default function EditAgendamentoModal({ isOpen, onClose, onAgendamentoUpd
                                 </p>
                             )}
                         </div>
+                    </div>
+
+                    <div>
+                        <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
+                            Status
+                        </label>
+                        <select
+                            id="status"
+                            name="status"
+                            value={formData.status}
+                            onChange={handleInputChange}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+                        >
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="CONFIRMADO">Confirmado</option>
+                            <option value="CANCELADO">Cancelado</option>
+                        </select>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

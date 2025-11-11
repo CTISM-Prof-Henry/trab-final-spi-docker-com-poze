@@ -61,4 +61,16 @@ export class SalaService {
             throw new InternalServerErrorException("Ocorreu um erro ao tentar busar." + error);
         }
     }
+
+    async findAllSalas() {
+        try {
+            const salas = await this.prismaService.sala.findMany({
+                orderBy: { nome: 'asc' }
+            });
+            return salas;
+        } catch (error) {
+            throw new InternalServerErrorException("Ocorreu um erro ao tentar busar as salas." + error);
+        }
+    }
+
 }

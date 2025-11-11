@@ -103,6 +103,7 @@ export class AgendamentoService {
                 data: dto.data,
                 horaInicio: dto.horaInicio,
                 horaFim: dto.horaFim,
+                status: dto.status,
                 disciplinaId: dto.disciplina.id!,
             },
             include: {

@@ -5,25 +5,66 @@ const api = axios.create({
     withCredentials: true
 });
 
-api.interceptors.response.use(
-    (res) => res,
-    async (err) => {
-        const original = err.config;
+// Flag para evitar loops múltiplos
+let isRefreshing = false;
+let failedQueue: any[] = [];
 
-        if (err.response.status === 401 && !original.retry) {
-            original.retry = true;
-            try {
-                await api.post("/auth/refresh");
-                return api(original); // Refaz o request original.
-            } catch (refreshError) {
-                console.error(refreshError);
-                if (typeof window !== "undefined") {
-                    window.location.href = "/login";
-                }
-            }
+const processQueue = (error: any, token: string | null = null) => {
+    failedQueue.forEach(prom => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+    failedQueue = [];
+};
+
+api.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+        if (error.response?.status !== 401 || originalRequest._retry) {
+            return Promise.reject(error);
         }
 
-        return Promise.reject(err);
+        if (isRefreshing) {
+            return new Promise((resolve, reject) => {
+                failedQueue.push({ resolve, reject });
+            }).then(() => {
+                return api(originalRequest);
+            }).catch(err => {
+                return Promise.reject(err);
+            });
+        }
+
+        originalRequest._retry = true;
+        isRefreshing = true;
+
+        try {
+            await api.post("/auth/refresh");
+            processQueue(null);
+            
+            return api(originalRequest);
+        } catch (refreshError) {
+            processQueue(refreshError, null);
+            
+            if (typeof window !== "undefined") {
+                document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                document.cookie = 'refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                
+                const currentPath = window.location.pathname + window.location.search;
+                if (currentPath !== '/login') {
+                    window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
+                } else {
+                    window.location.href = '/login';
+                }
+            }
+            
+            return Promise.reject(refreshError);
+        } finally {
+            isRefreshing = false;
+        }
     }
 );
 

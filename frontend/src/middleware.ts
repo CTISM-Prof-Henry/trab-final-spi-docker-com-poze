@@ -1,41 +1,30 @@
 import { MiddlewareConfig, NextRequest, NextResponse } from "next/server";
 
 const publicRoutes = [
-    {
-        path: '/login',
-        whenAuthenticated: 'redirect'
-    },
-    {
-        path: '/register',
-        whenAuthenticated: 'redirect'
-    }
-] as const;
-
-const REDIRECT_WHEN_NOT_AUTHENTICATED = '/login';
+    '/login',
+    '/register',
+    '/api/auth/login',
+    '/api/auth/refresh',
+    '/_next',
+    '/favicon.ico'
+];
 
 export function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
-    const publicRoute = publicRoutes.find(route => route.path === path);
+    
+    const isPublicRoute = publicRoutes.some(publicPath => 
+        path === publicPath || path.startsWith(publicPath)
+    );
+
+    if (isPublicRoute) {
+        return NextResponse.next();
+    }
+
     const authToken = request.cookies.get('access_token');
-
-    if (!authToken && publicRoute) {
-        return NextResponse.next();
-    }
-
-    if (!authToken && !publicRoute) {
-        const url = request.nextUrl.clone();
-        url.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED;
-        return NextResponse.redirect(url);
-    }
-
-    if (authToken && publicRoute && publicRoute.whenAuthenticated === 'redirect') {
-        const url = request.nextUrl.clone();
-        url.pathname = '/';
-        return NextResponse.redirect(url);
-    }
-
-    if (authToken && !publicRoute) {
-        return NextResponse.next();
+    
+    if (!authToken) {
+        const loginUrl = new URL('/login', request.url);
+        return NextResponse.redirect(loginUrl);
     }
 
     return NextResponse.next();
@@ -43,13 +32,6 @@ export function middleware(request: NextRequest) {
 
 export const config: MiddlewareConfig = {
     matcher: [
-        /*
-        * Match all request paths except for the ones starting with:
-        * - api (API routes)
-        * - _next/static (static files)
-        * - _next/image (image optimization files)
-        * - favicon.ico, sitemap.xml, robots.txt (metadata files)
-        */
-        "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+        "/((?!api/auth|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
     ],
 };

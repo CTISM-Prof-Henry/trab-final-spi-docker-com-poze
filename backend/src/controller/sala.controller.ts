@@ -19,4 +19,9 @@ export class SalaController {
         paginationDTO.page = Number(page);
         return this.salaService.findAllSalasPaginated(paginationDTO);
     }
+
+    @Get('find-all')
+    findAll() {
+        return this.salaService.findAllSalas();
+    }
 }

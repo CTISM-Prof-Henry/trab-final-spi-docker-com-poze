@@ -60,19 +60,42 @@ export class AuthService {
     }
 
     async refreshTokens(userId: number, refreshToken: string) {
-        const user = await this.prismaService.user.findUnique({ where: { id: userId } });
-        if (!user || !user.hashedRt) {
-            throw new ForbiddenException('Acesso negado!');
-        }
+        try {
+            console.log(`Attempting refresh for user ${userId}`);
+            
+            const user = await this.prismaService.user.findUnique({ 
+                where: { id: userId } 
+            });
+            
+            if (!user) {
+                console.log(`User ${userId} not found`);
+                throw new ForbiddenException('User not found');
+            }
 
-        const rtMatches = await bcrypt.compare(refreshToken, user.hashedRt);
-        if (!rtMatches) {
-            throw new ForbiddenException('Acesso negado!');
-        }
+            if (!user.hashedRt) {
+                console.log(`No hashed RT for user ${userId}`);
+                throw new ForbiddenException('No refresh token stored');
+            }
 
-        const tokens = await this.signTokens(user.id, user.matricula, user.tipo);
-        await this.updateRtHash(user.id, tokens.refresh_token);
-        return tokens;
+            const rtMatches = await bcrypt.compare(refreshToken, user.hashedRt);
+            if (!rtMatches) {
+                console.log(`RT mismatch for user ${userId}`);
+                await this.prismaService.user.update({
+                    where: { id: userId },
+                    data: { hashedRt: null },
+                });
+                throw new ForbiddenException('Refresh token mismatch');
+            }
+
+            const tokens = await this.signTokens(user.id, user.matricula, user.tipo);
+            await this.updateRtHash(user.id, tokens.refresh_token);
+            
+            console.log(`Refresh successful for user ${userId}`);
+            return tokens;
+        } catch (error) {
+            console.error('Refresh token error:', error);
+            throw error;
+        }
     }
 
     async logout(userId: number) {
