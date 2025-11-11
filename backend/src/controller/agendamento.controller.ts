@@ -27,4 +27,9 @@ export class AgendamentoController {
         return this.agendamentoService.updateById(Number(agendamentoId), dto);
     }
 
+    @Get('/find-by-user/:uuid')
+    findByUserUuid(@Param('uuid') userUuid: string) {
+        return this.agendamentoService.findByUserUuid(userUuid);
+    }
+
 }

@@ -133,4 +133,43 @@ export class AgendamentoService {
         
         return updatedDto;
     }
+
+    async findByUserUuid(userUuid: string) {
+        const user = await this.prismaService.user.findUnique({
+            where: { uuid: userUuid }
+        });
+        if (!user) {
+            throw new BadRequestException('Usuário não encontrado.');
+        }
+        
+        const agendamentos = await this.prismaService.agendamento.findMany({
+            where: { userId: user.id },
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                        email: true,
+                        matricula: true,
+                        tipo: true,
+                    }
+                },
+                sala: true,
+                disciplina: true,
+            }
+        });
+        
+        const dto: AgendamentoDTO[] = agendamentos.map(agendamento => ({
+            id: agendamento.id,
+            data: agendamento.data,
+            horaInicio: agendamento.horaInicio.toString(),
+            horaFim: agendamento.horaFim.toString(),
+            status: agendamento.status,
+            user: agendamento.user,
+            sala: agendamento.sala,
+            disciplina: agendamento.disciplina,
+        }));
+        
+        return dto;
+    }
+
 }
