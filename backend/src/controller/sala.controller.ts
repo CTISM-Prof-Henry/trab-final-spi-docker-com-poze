@@ -24,4 +24,13 @@ export class SalaController {
     findAll() {
         return this.salaService.findAllSalas();
     }
+
+    @Get('find-all-livres/paginated/:page/:limit')
+    findAllLivres(@Param("page") page: number, @Param("limit") limit: number) {
+        let paginationDTO = new PaginationDTO();
+        paginationDTO.limit = Number(limit);
+        paginationDTO.page = Number(page);
+        return this.salaService.findAllSalasLivres(paginationDTO);
+    }
+
 }

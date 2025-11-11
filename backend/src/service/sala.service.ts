@@ -73,4 +73,43 @@ export class SalaService {
         }
     }
 
+    async findAllSalasLivres(paginationDTO: PaginationDTO) {
+        try {
+            const skip = (paginationDTO.page!) * paginationDTO.limit!;
+            const [salas, total] = await Promise.all([
+                this.prismaService.sala.findMany({
+                    skip,
+                    take: paginationDTO.limit,
+                    include: {
+                        centro: true
+                    },
+                    where: {
+                        AND: [
+                            { agendamentos: { none: {} } }
+                        ]
+                    },
+                    orderBy: { nome: 'asc' }
+                }), this.prismaService.sala.count({
+                    where: {
+                        AND: [
+                            { agendamentos: { none: {} } }
+                        ]
+                    }
+                })
+            ]);
+
+            return {
+                message: "Salas livres encontradas com sucesso!",
+                data: {
+                    total,
+                    page: paginationDTO.page,
+                    lastPage: Math.ceil(total / paginationDTO.limit!),
+                    salas
+                },
+            };
+        } catch (error) {
+            throw new InternalServerErrorException("Ocorreu um erro ao tentar busar." + error);
+        }
+    }
+
 }
