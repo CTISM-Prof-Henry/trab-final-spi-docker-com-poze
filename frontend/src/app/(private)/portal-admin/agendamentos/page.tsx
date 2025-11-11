@@ -7,13 +7,17 @@ import api from "@/lib/api";
 import LoadComponent from "@/shared/load";
 import { useEffect, useState } from "react";
 import { v4 } from "uuid";
+import CreateAgendamentoModal from "./create-agendamento-modal";
+import EditAgendamentoModal from "./edit-agendamento-modal";
+import Swal from "sweetalert2";
 
 export default function AgendamentosAdmin() {
     
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [agendamentos, setAgendamentos] = useState<AgendamentoDTO[]>([]);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [editingAgendamento, setEditingAgendamento] = useState<boolean>(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false); // ADICIONE ESTE STATE
+    const [editingAgendamento, setEditingAgendamento] = useState<AgendamentoDTO | null>(null); // MODIFIQUE ESTE STATE
 
     async function fetchAgendamentos() {
         setIsLoading(true);
@@ -31,7 +35,67 @@ export default function AgendamentosAdmin() {
         fetchAgendamentos();
     }, []);
 
-    // Função para gerar cor baseada no status
+    const openModalCreateAgendamento = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleAgendamentoCreated = () => {
+        fetchAgendamentos();
+        closeModal();
+    };
+
+    const onClickMakeAction = async (action: "edit" | "delete", agendamento: AgendamentoDTO) => {
+        if (action === "delete") {
+            Swal.fire({
+                title: "Você tem certeza?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim.",
+                cancelButtonText: "Cancelar"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        setIsLoading(true);
+                        await api.delete(`/agendamento/${agendamento.id}`);
+                        Swal.fire({
+                            title: "Agendamento deletado com sucesso.",
+                            icon: "success"
+                        });
+                        fetchAgendamentos();
+                    } catch (error: any) {
+                        console.error("Error deleting agendamento:", error);
+                        Swal.fire({
+                            title: "Erro ao deletar agendamento.",
+                            text: error.response?.data?.message || "Tente novamente mais tarde.",
+                            icon: "error"
+                        });
+                    } finally {
+                        setIsLoading(false);
+                    }
+                }
+            });
+        } else if (action === "edit") {
+            setEditingAgendamento(agendamento);
+            setIsEditModalOpen(true);
+        }
+    };
+
+    const closeEditModal = () => {
+        setIsEditModalOpen(false);
+        setEditingAgendamento(null);
+    };
+
+    const handleAgendamentoUpdated = () => {
+        fetchAgendamentos();
+        closeEditModal();
+    };
+
     const getStatusBadge = (status: string) => {
         const statusLower = status?.toLowerCase() || '';
         if (statusLower.includes('confirmado') || statusLower.includes('aprovado')) {
@@ -45,7 +109,6 @@ export default function AgendamentosAdmin() {
         }
     };
 
-    // CORREÇÃO: Melhorar a formatação de data com tratamento de erro
     const formatDate = (dateString: string | Date) => {
         if (!dateString) return 'N/A';
         
@@ -64,12 +127,10 @@ export default function AgendamentosAdmin() {
         }
     };
 
-    // Função para formatar horário corretamente
     const formatTime = (timeString: string | Date) => {
         if (!timeString) return 'N/A';
         
         try {
-            // Se for uma string no formato incorreto, tentar extrair apenas a hora
             if (typeof timeString === 'string' && timeString.includes('GMT')) {
                 const time = new Date(timeString);
                 if (isNaN(time.getTime())) return 'Horário inválido';
@@ -81,7 +142,6 @@ export default function AgendamentosAdmin() {
                 });
             }
             
-            // Se já for um objeto Date ou string no formato correto
             const time = new Date(timeString);
             if (isNaN(time.getTime())) return 'Horário inválido';
             
@@ -96,7 +156,6 @@ export default function AgendamentosAdmin() {
         }
     };
 
-    // Função para calcular duração entre horários
     const calculateDuration = (horaInicio: string | Date, horaFim: string | Date) => {
         if (!horaInicio || !horaFim) return 'N/A';
         
@@ -119,7 +178,6 @@ export default function AgendamentosAdmin() {
         }
     };
 
-    // Função para gerar cor única baseada no nome
     const getAgendamentoColor = (nome: string) => {
         const colors = [
             "from-blue-500 to-cyan-600",
@@ -143,7 +201,6 @@ export default function AgendamentosAdmin() {
         ag.status?.toLowerCase().includes('pendente') || ag.status?.toLowerCase().includes('aguardando')
     ).length;
 
-    // CORREÇÃO: Comparar datas corretamente convertendo ambas para o mesmo formato
     const hoje = new Date().toISOString().split('T')[0];
     const agendamentosHoje = agendamentos.filter(ag => {
         if (!ag.data) return false;
@@ -163,6 +220,15 @@ export default function AgendamentosAdmin() {
                         <h1 className="text-3xl font-bold text-gray-800 mb-2">Gerenciamento de Agendamentos</h1>
                         <p className="text-gray-600">Lista de todos os agendamentos de salas cadastrados</p>
                     </div>
+                    <Button 
+                        onClick={openModalCreateAgendamento}
+                        className="bg-purple-600 hover:bg-purple-700 shadow-lg hover:shadow-xl text-white transition-all"
+                    >
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        Novo Agendamento
+                    </Button>
                 </div>
                 <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200">
                     <div className="flex flex-wrap items-center gap-6 text-sm text-purple-800">
@@ -329,7 +395,7 @@ export default function AgendamentosAdmin() {
                                                     <Button
                                                         size="sm"
                                                         className="bg-blue-600 hover:bg-blue-700 text-white shadow hover:shadow-md transition-all"
-                                                        onClick={() => console.log('Editar agendamento:', agendamento.id)}
+                                                        onClick={() => onClickMakeAction("edit", agendamento)}
                                                     >
                                                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -340,7 +406,7 @@ export default function AgendamentosAdmin() {
                                                         size="sm"
                                                         variant="destructive"
                                                         className="bg-red-600 hover:bg-red-700 text-white shadow hover:shadow-md transition-all"
-                                                        onClick={() => console.log('Excluir agendamento:', agendamento.id)}
+                                                        onClick={() => onClickMakeAction("delete", agendamento)}
                                                     >
                                                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -355,8 +421,6 @@ export default function AgendamentosAdmin() {
                             </Table>
                         </div>
                     </div>
-
-                    {/* Statistics Cards */}
                     <div className="w-full max-w-7xl">
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
@@ -368,7 +432,6 @@ export default function AgendamentosAdmin() {
                                 <div className="text-3xl font-bold text-gray-800">{agendamentos.length}</div>
                                 <div className="text-gray-600">Total de Agendamentos</div>
                             </div>
-                            
                             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
                                 <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
                                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -378,7 +441,6 @@ export default function AgendamentosAdmin() {
                                 <div className="text-3xl font-bold text-gray-800">{agendamentosConfirmados}</div>
                                 <div className="text-gray-600">Confirmados</div>
                             </div>
-                            
                             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
                                 <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-3">
                                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -388,7 +450,6 @@ export default function AgendamentosAdmin() {
                                 <div className="text-3xl font-bold text-gray-800">{agendamentosPendentes}</div>
                                 <div className="text-gray-600">Pendentes</div>
                             </div>
-                            
                             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
                                 <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-3">
                                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -402,7 +463,6 @@ export default function AgendamentosAdmin() {
                     </div>
                 </>
             ) : (
-                /* Empty State */
                 <div className="w-full max-w-7xl">
                     <div className="flex flex-col items-center justify-center p-12 bg-white rounded-xl shadow-lg border border-gray-200">
                         <div className="text-center">
@@ -412,11 +472,31 @@ export default function AgendamentosAdmin() {
                                 </svg>
                             </div>
                             <h3 className="text-xl font-semibold text-gray-700 mb-2">Nenhum agendamento encontrado</h3>
-                            <p className="text-gray-500">Não há agendamentos cadastrados no sistema no momento.</p>
+                            <p className="text-gray-500 mb-6">Não há agendamentos cadastrados no sistema no momento.</p>
+                            <Button 
+                                onClick={openModalCreateAgendamento}
+                                className="bg-purple-600 hover:bg-purple-700 text-white"
+                            >
+                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                                Criar Primeiro Agendamento
+                            </Button>
                         </div>
                     </div>
                 </div>
             )}
+            <CreateAgendamentoModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                onAgendamentoCreated={handleAgendamentoCreated}
+            />
+            <EditAgendamentoModal
+                isOpen={isEditModalOpen}
+                onClose={closeEditModal}
+                onAgendamentoUpdated={handleAgendamentoUpdated}
+                agendamento={editingAgendamento}
+            />
         </div>
     );
 }
