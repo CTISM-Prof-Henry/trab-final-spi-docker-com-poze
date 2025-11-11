@@ -34,7 +34,7 @@ export default function PortalUsuarioHome() {
             
             const [agendamentosRes, salasRes] = await Promise.all([
                 api.get(`/agendamento/find-by-user/${userUuid}`),
-                api.get('/sala/find-all')
+                api.get('/sala/find-all-livres/paginated/0/20')
             ]);
 
             const agendamentos: AgendamentoDTO[] = agendamentosRes.data;
@@ -53,10 +53,10 @@ export default function PortalUsuarioHome() {
                 const hoje = new Date();
                 hoje.setHours(0, 0, 0, 0);
                 return dataAgendamento > hoje;
-            }).slice(0, 5); // Limita a 5 próximos
+            }).slice(0, 5);
             setProximosAgendamentos(futuros);
 
-            setSalasDisponiveis(salasRes.data.slice(0, 6));
+            setSalasDisponiveis(salasRes.data.data.salas.slice(0, 6));
 
             setStats({
                 totalAgendamentos: agendamentos.length,

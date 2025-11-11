@@ -32,6 +32,7 @@ export default function Header() {
     const userLinks = [
         { href: "/", label: "Início", icon: "🏠" },
         { href: "/portal-usuario/agendar", label: "Agendar", icon: "➕" },
+        { href: "/portal-usuario/salas", label: "Salas", icon: "🚪" },
     ];
 
     switch (isAdmin) {
