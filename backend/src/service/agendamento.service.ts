@@ -24,7 +24,7 @@ export class AgendamentoService {
         });
         const dto: AgendamentoDTO[] = agendamentos.map(agendamento => ({
             id: agendamento.id,
-            date: agendamento.data,
+            data: agendamento.data,
             horaInicio: agendamento.horaInicio.toString(),
             horaFim: agendamento.horaFim.toString(),
             status: agendamento.status,

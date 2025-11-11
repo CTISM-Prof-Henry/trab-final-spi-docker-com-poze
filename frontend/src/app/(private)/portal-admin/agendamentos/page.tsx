@@ -45,13 +45,78 @@ export default function AgendamentosAdmin() {
         }
     };
 
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
+    // CORREÇÃO: Melhorar a formatação de data com tratamento de erro
+    const formatDate = (dateString: string | Date) => {
+        if (!dateString) return 'N/A';
+        
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return 'Data inválida';
+            
+            return date.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        } catch (error) {
+            console.error('Erro ao formatar data:', error);
+            return 'Data inválida';
+        }
+    };
+
+    // Função para formatar horário corretamente
+    const formatTime = (timeString: string | Date) => {
+        if (!timeString) return 'N/A';
+        
+        try {
+            // Se for uma string no formato incorreto, tentar extrair apenas a hora
+            if (typeof timeString === 'string' && timeString.includes('GMT')) {
+                const time = new Date(timeString);
+                if (isNaN(time.getTime())) return 'Horário inválido';
+                
+                return time.toLocaleTimeString('pt-BR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+            }
+            
+            // Se já for um objeto Date ou string no formato correto
+            const time = new Date(timeString);
+            if (isNaN(time.getTime())) return 'Horário inválido';
+            
+            return time.toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+        } catch (error) {
+            console.error('Erro ao formatar horário:', error);
+            return 'Horário inválido';
+        }
+    };
+
+    // Função para calcular duração entre horários
+    const calculateDuration = (horaInicio: string | Date, horaFim: string | Date) => {
+        if (!horaInicio || !horaFim) return 'N/A';
+        
+        try {
+            const inicio = new Date(horaInicio);
+            const fim = new Date(horaFim);
+            
+            if (isNaN(inicio.getTime()) || isNaN(fim.getTime())) {
+                return 'N/A';
+            }
+            
+            const diff = fim.getTime() - inicio.getTime();
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            return `${hours}h ${minutes.toString().padStart(2, '0')}m`;
+        } catch (error) {
+            console.error('Erro ao calcular duração:', error);
+            return 'N/A';
+        }
     };
 
     // Função para gerar cor única baseada no nome
@@ -78,8 +143,13 @@ export default function AgendamentosAdmin() {
         ag.status?.toLowerCase().includes('pendente') || ag.status?.toLowerCase().includes('aguardando')
     ).length;
 
+    // CORREÇÃO: Comparar datas corretamente convertendo ambas para o mesmo formato
     const hoje = new Date().toISOString().split('T')[0];
-    const agendamentosHoje = agendamentos.filter(ag => ag.date === hoje).length;
+    const agendamentosHoje = agendamentos.filter(ag => {
+        if (!ag.data) return false;
+        const dataAgendamento = new Date(ag.data).toISOString().split('T')[0];
+        return dataAgendamento === hoje;
+    }).length;
 
     if (isLoading) {
         return <LoadComponent />;
@@ -198,7 +268,7 @@ export default function AgendamentosAdmin() {
                                                     <div className="flex-1">
                                                         <div className="flex items-center gap-3">
                                                             <span className="font-bold text-gray-800 text-lg">
-                                                                {formatDate(agendamento.date!.toString())}
+                                                                {formatDate(agendamento.data!)}
                                                             </span>
                                                         </div>
                                                         <div className="flex items-center gap-2 mt-1">
@@ -212,15 +282,10 @@ export default function AgendamentosAdmin() {
                                             <TableCell className="py-4 border-r border-gray-100">
                                                 <div className="flex flex-col items-center gap-1">
                                                     <span className="font-mono text-gray-700 bg-gray-100 px-3 py-1 rounded-lg text-sm border border-gray-200">
-                                                        {agendamento.horaInicio} - {agendamento.horaFim}
+                                                        {formatTime(agendamento.horaInicio!)} - {formatTime(agendamento.horaFim!)}
                                                     </span>
                                                     <span className="text-xs text-gray-500">
-                                                        Duração: {(() => {
-                                                            const [h1, m1] = agendamento.horaInicio?.split(':').map(Number) || [0, 0];
-                                                            const [h2, m2] = agendamento.horaFim?.split(':').map(Number) || [0, 0];
-                                                            const diff = (h2 * 60 + m2) - (h1 * 60 + m1);
-                                                            return `${Math.floor(diff / 60)}h ${diff % 60}m`;
-                                                        })()}
+                                                        Duração: {calculateDuration(agendamento.horaInicio!, agendamento.horaFim!)}
                                                     </span>
                                                 </div>
                                             </TableCell>
@@ -252,11 +317,11 @@ export default function AgendamentosAdmin() {
                                             <TableCell className="py-4 border-r border-gray-100">
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-gray-700">{agendamento.disciplina?.nome || 'N/A'}</span>
-                                                {agendamento.disciplina?.codigo && (
-                                                    <span className="text-xs text-gray-500 bg-gray-100 px-1 rounded">
-                                                        {agendamento.disciplina.codigo}
-                                                    </span>
-                                                )}
+                                                    {agendamento.disciplina?.codigo && (
+                                                        <span className="text-xs text-gray-500 bg-gray-100 px-1 rounded">
+                                                            {agendamento.disciplina.codigo}
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </TableCell>
                                             <TableCell className="py-4">
