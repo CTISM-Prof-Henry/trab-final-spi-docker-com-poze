@@ -1,0 +1,52 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DOCKER_REGISTRY: registry.gitlab.com
+  BACKEND_IMAGE: $DOCKER_REGISTRY/$CI_PROJECT_PATH/backend:$CI_COMMIT_SHORT_SHA
+  FRONTEND_IMAGE: $DOCKER_REGISTRY/$CI_PROJECT_PATH/frontend:$CI_COMMIT_SHORT_SHA
+
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+build_backend:
+  stage: build
+  script:
+    - cd backend
+    - docker build -t $BACKEND_IMAGE .
+    - docker push $BACKEND_IMAGE
+  only:
+    - dev
+    - main
+
+build_frontend:
+  stage: build
+  script:
+    - cd frontend
+    - docker build -t $FRONTEND_IMAGE .
+    - docker push $FRONTEND_IMAGE
+  only:
+    - dev
+    - main
+
+test_backend:
+  stage: test
+  script:
+    - cd backend
+    - docker build -t backend-test .
+    - docker run --rm backend-test npm test
+  only:
+    - dev
+    - main
+
+deploy_swarm:
+  stage: deploy
+  script:
+    - docker stack deploy -c docker-compose.yml agendamento-app --with-registry-auth
+  environment:
+    name: production
+    url: http://seu-servidor.com
+  only:
+    - main
